@@ -1,0 +1,16 @@
+networks:
+  network:  # Define the network
+    ipam:
+      driver: default
+      config:
+        - subnet: 14.0.0.0/24  # Define the subnet for the custom network
+
+services:
+  web-nuxt:
+    build:
+      dockerfile: ./docker/web-nuxt/Dockerfile
+    ports:
+      - '14004:3000'
+    networks:
+      network:
+        ipv4_address: 14.0.0.4
