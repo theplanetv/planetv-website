@@ -8,5 +8,11 @@ build-docker:
     - docker:dind
   script:
     - docker-compose up -d
-  
 
+enter-nix-dev-shell:
+  stage: build
+  image: nixpkgs/nix-flakes:latest
+  services:
+    - docker:dind
+  script:
+    - nix develop .
