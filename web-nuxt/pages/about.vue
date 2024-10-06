@@ -5,5 +5,6 @@
     <p>CV will be here soon!</p>
     <p>Currently, I love contributing open source projects and learning computer.</p>
     <p>Gonna organize my time better! :smile:</p>
+    <Footer />
   </PageLayout>
 </template>
