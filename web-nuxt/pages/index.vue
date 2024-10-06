@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <PageLayout>
+    <Menu />
     <h1>Home page</h1>
-  </div>
+  </PageLayout>
 </template>
