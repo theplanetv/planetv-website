@@ -1,5 +1,6 @@
 stages:
   - build
+  - security
 
 build-docker:
   stage: build
@@ -16,3 +17,15 @@ enter-nix-dev-shell:
     - docker:dind
   script:
     - nix develop .
+
+security-scan:
+  stage: security
+  image:
+    name: aquasec/trivy:latest
+    entrypoint: [""]
+  script:
+    - trivy fs --scanners vuln --severity CRITICAL,HIGH,MEDIUM,LOW --include-dev-deps --format json -o trivy-report.json .
+  artifacts:
+    paths:
+      - trivy-report.json
+    expire_in: 2 weeks
