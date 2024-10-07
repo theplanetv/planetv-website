@@ -15,6 +15,17 @@ services:
       network:
         ipv4_address: 14.0.0.3
 
+  database-postgresql:
+    build:
+      dockerfile: ./docker/database-postgresql/Dockerfile
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - '14005:5432'
+    networks:
+      network:
+        ipv4_address: 14.0.0.5
+
   web-nuxt:
     build:
       dockerfile: ./docker/web-nuxt/Dockerfile
