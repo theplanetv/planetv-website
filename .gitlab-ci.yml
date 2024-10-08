@@ -1,5 +1,6 @@
 stages:
   - build
+  - test
   - security
 
 build-docker:
@@ -9,6 +10,17 @@ build-docker:
     - docker:dind
   script:
     - docker-compose up -d
+
+test-service-blogtag-docker:
+  stage: test
+  needs:
+    - build-docker
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker-compose up -d database-postgresql api-chi
+    - sh scripts/test.bash test-api-service-blogtag
 
 enter-nix-dev-shell:
   stage: build
