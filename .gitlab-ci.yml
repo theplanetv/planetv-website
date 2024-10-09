@@ -20,7 +20,7 @@ test-service-blogtag-docker:
     - docker:dind
   script:
     - docker-compose up -d database-postgresql api-chi
-    - sh scripts/test.bash test-api-service-blogtag
+    - sh scripts/test.bash api-service-blogtag
 
 enter-nix-dev-shell:
   stage: build
