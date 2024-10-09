@@ -49,10 +49,10 @@ print_list() {
 # Main script
 if [ $# -eq 1 ]; then
 	case "$1" in
-		"test-api-service-blogtag" )
+		"api-service-blogtag" )
 			test_wait_postgresql service-blogtag ;;
 
-		"test-coverage" )
+		"coverage" )
 			docker exec ${PROJECT_API_CONTAINER} go test -coverprofile=coverage.out ./...
 			docker exec ${PROJECT_API_CONTAINER} go tool cover -html=coverage.out -o ./coverage.html
 			docker cp ${PROJECT_API_CONTAINER}:/api-chi/coverage.html ./coverage.html
