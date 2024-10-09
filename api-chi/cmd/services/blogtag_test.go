@@ -57,6 +57,8 @@ func Test_BlogTagService(t *testing.T) {
 		value, err := service.Update(&input)
 		assert.NoError(t, err)
 		assert.NotEmpty(t, value)
+		assert.Equal(t, value.Id, input.Id)
+		assert.Equal(t, value.Name, input.Name)
 	})
 
 	t.Run("Remove success", func(t *testing.T) {
