@@ -67,7 +67,7 @@ func Test_BlogTagService(t *testing.T) {
 		defer service.Close()
 
 		// Remove database
-		value, err := service.Remove(id)
+		value, err := service.Remove(&id)
 		assert.NoError(t, err)
 		assert.NotEmpty(t, value)
 	})
