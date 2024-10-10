@@ -14,21 +14,23 @@
       devShells = forAllSystems (system:
         let pkgs = nixpkgsFor.${system};
         in {
-          default = pkgs.mkShell {
-            nativeBuildInputs = [
-              # Development tools
-              pkgs.dbeaver-bin
-              pkgs.nodejs
-              pkgs.go
+          default = with pkgs;
+            mkShell {
+              nativeBuildInputs = [
+                # Development tools
+                dbeaver-bin
+                nodejs
+                go
 
-              # Language servers
-              pkgs.gopls
-              pkgs.nixd
+                # Language servers
+                gopls
+                nil
+                vue-language-server
 
-              # Other tools
-              pkgs.scc
-            ];
-          };
+                # Other tools
+                scc
+              ];
+            };
         });
     };
 }
