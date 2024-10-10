@@ -37,6 +37,11 @@ test_wait_postgresql() {
 		docker exec ${PROJECT_API_CONTAINER} go test -v \
 			/api-chi/cmd/services/blogtag.go /api-chi/cmd/services/blogtag_test.go
 		;;
+
+		"route-blogtag" )
+		docker exec ${PROJECT_API_CONTAINER} go test -v \
+			/api-chi/cmd/routes/blogtag.go /api-chi/cmd/routes/blogtag_test.go
+		;;
 	esac
 }
 
@@ -51,6 +56,9 @@ if [ $# -eq 1 ]; then
 	case "$1" in
 		"api-service-blogtag" )
 			test_wait_postgresql service-blogtag ;;
+
+		"api-route-blogtag" )
+			test_wait_postgresql route-blogtag ;;
 
 		"coverage" )
 			docker exec ${PROJECT_API_CONTAINER} go test -coverprofile=coverage.out ./...

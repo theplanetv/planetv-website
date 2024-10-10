@@ -74,11 +74,11 @@ func (s *BlogTagService) Update(input *models.BlogTag) (models.BlogTag, error) {
 	return value, nil
 }
 
-func (s *BlogTagService) Remove(id string) (string, error) {
+func (s *BlogTagService) Remove(id *string) (string, error) {
 	// Execute SQL
 	sql := "SELECT * FROM remove_blog_tag(@id);"
 	args := pgx.NamedArgs{
-		"id": id,
+		"id": *id,
 	}
 	value := ""
 	err := s.Conn.QueryRow(config.CTX, sql, args).Scan(&value)

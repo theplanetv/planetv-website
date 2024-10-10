@@ -22,6 +22,17 @@ test-service-blogtag-docker:
     - docker-compose up -d database-postgresql api-chi
     - sh scripts/test.bash api-service-blogtag
 
+test-route-blogtag-docker:
+  stage: test
+  needs:
+    - build-docker
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker-compose up -d database-postgresql api-chi
+    - sh scripts/test.bash api-route-blogtag
+
 enter-nix-dev-shell:
   stage: build
   image: nixpkgs/nix-flakes:latest
