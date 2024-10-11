@@ -17,7 +17,7 @@ var (
 	POSTGRES_URL      string
 )
 
-func LoadConfig() {
+func LoadDatabaseConfig() {
 	POSTGRES_USERNAME = os.Getenv("POSTGRES_USERNAME")
 	POSTGRES_PASSWORD = os.Getenv("POSTGRES_PASSWORD")
 	POSTGRES_HOST = os.Getenv("POSTGRES_HOST")
