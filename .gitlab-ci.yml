@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - lint
   - security
 
 build-docker:
@@ -10,6 +11,14 @@ build-docker:
     - docker:dind
   script:
     - docker-compose up -d
+
+enter-nix-dev-shell:
+  stage: build
+  image: nixpkgs/nix-flakes:latest
+  services:
+    - docker:dind
+  script:
+    - nix develop .
 
 test-service-blogtag-docker:
   stage: test
@@ -33,13 +42,13 @@ test-route-blogtag-docker:
     - docker-compose up -d database-postgresql api-chi
     - sh scripts/test.bash api-route-blogtag
 
-enter-nix-dev-shell:
-  stage: build
-  image: nixpkgs/nix-flakes:latest
-  services:
-    - docker:dind
+linting-api-chi:
+  stage: lint
+  needs:
+    - build-docker
+  image: golangci/golangci-lint:v1.61.0-alpine
   script:
-    - nix develop .
+    - cd ./api-chi && golangci-lint run .
 
 security-scan:
   stage: security

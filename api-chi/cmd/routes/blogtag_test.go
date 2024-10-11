@@ -3,7 +3,7 @@ package routes
 import (
 	"api-chi/cmd/models"
 	"api-chi/internal/message"
-	
+
 	"bytes"
 	"encoding/json"
 	"net/http"
@@ -27,7 +27,8 @@ func TestBlogTagRoutes(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, res.Code)
 		var response message.Response
-		json.NewDecoder(res.Body).Decode(&response)
+		err := json.NewDecoder(res.Body).Decode(&response)
+		assert.NoError(t, err)
 		assert.Equal(t, message.GET_DATA_SUCCESS, response.Message)
 		assert.NotNil(t, response.Data)
 	})
@@ -43,7 +44,8 @@ func TestBlogTagRoutes(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, res.Code)
 		var response message.Response
-		json.NewDecoder(res.Body).Decode(&response)
+		err := json.NewDecoder(res.Body).Decode(&response)
+		assert.NoError(t, err)
 		assert.Equal(t, message.CREATE_DATA_SUCCESS, response.Message)
 		assert.NotNil(t, response.Data)
 
@@ -72,7 +74,8 @@ func TestBlogTagRoutes(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, res.Code)
 		var response message.Response
-		json.NewDecoder(res.Body).Decode(&response)
+		err := json.NewDecoder(res.Body).Decode(&response)
+		assert.NoError(t, err)
 		assert.Equal(t, message.UPDATE_DATA_SUCCESS, response.Message)
 		assert.NotNil(t, response.Data)
 	})
@@ -89,7 +92,8 @@ func TestBlogTagRoutes(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, res.Code)
 		var response message.Response
-		json.NewDecoder(res.Body).Decode(&response)
+		err := json.NewDecoder(res.Body).Decode(&response)
+		assert.NoError(t, err)
 		assert.Equal(t, message.REMOVE_DATA_SUCCESS, response.Message)
 	})
 }

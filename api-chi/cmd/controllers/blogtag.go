@@ -4,6 +4,7 @@ import (
 	"api-chi/cmd/models"
 	"api-chi/cmd/services"
 	"api-chi/internal/message"
+	"log"
 
 	"encoding/json"
 	"net/http"
@@ -18,8 +19,11 @@ type BlogTagController struct {
 
 func (c *BlogTagController) Count(w http.ResponseWriter, r *http.Request) {
 	// Open and close database after end
-	c.service.Open()
+	err := c.service.Open()
 	defer c.service.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Execute Count and return if failed or success
 	data, err := c.service.Count()
@@ -52,8 +56,11 @@ func (c *BlogTagController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Open and close database after end
-	c.service.Open()
+	err := c.service.Open()
 	defer c.service.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Execute Count and return if failed or success
 	data, err := c.service.Create(&input)
@@ -86,8 +93,11 @@ func (c *BlogTagController) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Open and close database after end
-	c.service.Open()
+	err := c.service.Open()
 	defer c.service.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Execute Count and return if failed or success
 	data, err := c.service.Update(&input)
@@ -119,8 +129,11 @@ func (c *BlogTagController) Remove(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Open and close database after end
-	c.service.Open()
+	err := c.service.Open()
 	defer c.service.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Execute Count and return if failed or success
 	data, err := c.service.Remove(&id)
