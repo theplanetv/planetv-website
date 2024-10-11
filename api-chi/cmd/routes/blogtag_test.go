@@ -6,6 +6,7 @@ import (
 
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -14,13 +15,31 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestBlogTagRoutes(t *testing.T) {
+func Test_BlogTagRoutes(t *testing.T) {
 	r := chi.NewRouter()
 	BlogTagRoutes(r)
 	id := ""
 
 	t.Run("Count success", func(t *testing.T) {
 		req := httptest.NewRequest("GET", "/blogtag/count", nil)
+		res := httptest.NewRecorder()
+
+		r.ServeHTTP(res, req)
+
+		assert.Equal(t, http.StatusOK, res.Code)
+		var response message.Response
+		err := json.NewDecoder(res.Body).Decode(&response)
+		assert.NoError(t, err)
+		assert.Equal(t, message.GET_DATA_SUCCESS, response.Message)
+		assert.NotNil(t, response.Data)
+	})
+
+	t.Run("GetAll success", func(t *testing.T) {
+		search := ""
+		limit := 10
+		page := 1
+
+		req := httptest.NewRequest("GET", fmt.Sprintf("/blogtag?search=%s&limit=%d&page=%d", search, limit, page), nil)
 		res := httptest.NewRecorder()
 
 		r.ServeHTTP(res, req)

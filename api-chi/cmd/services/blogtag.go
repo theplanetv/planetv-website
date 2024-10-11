@@ -41,6 +41,47 @@ func (s *BlogTagService) Count() (int, error) {
 	return value, nil
 }
 
+func (s *BlogTagService) GetAll(search *string, limit *int, page *int) ([]models.BlogTag, error) {
+	// Set default range for limit
+	if *limit < 10 {
+		*limit = 10
+	} else if *limit > 50 {
+		*limit = 50
+	}
+
+	// Set default range for page
+	if *page < 1 {
+		*page = 0
+	} else {
+		*page = *page - 1
+	}
+
+	// Execute SQL
+	sql := "SELECT * FROM get_all_blog_tag(@search, @limit, @page);"
+	args := pgx.NamedArgs{
+		"search": *search,
+		"limit":  *limit,
+		"page":   *page,
+	}
+	value := []models.BlogTag{}
+	rows, err := s.Conn.Query(config.CTX, sql, args)
+	if err != nil {
+		return value, err
+	}
+	for rows.Next() {
+		item := models.BlogTag{}
+
+		if err := rows.Scan(&item.Id, &item.Name); err != nil {
+			return nil, err
+		}
+
+		value = append(value, item)
+	}
+
+	// If success return nil
+	return value, nil
+}
+
 func (s *BlogTagService) Create(input *models.BlogTag) (string, error) {
 	// Execute SQL
 	sql := "SELECT * FROM create_blog_tag(@name);"
