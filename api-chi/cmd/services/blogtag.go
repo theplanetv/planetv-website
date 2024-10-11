@@ -13,7 +13,7 @@ type BlogTagService struct {
 }
 
 func (s *BlogTagService) Open() error {
-	config.LoadConfig()
+	config.LoadDatabaseConfig()
 	conn, err := pgxpool.New(config.CTX, config.POSTGRES_URL)
 	if err != nil {
 		return err

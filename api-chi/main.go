@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api-chi/cmd/config"
 	"api-chi/cmd/routes"
 
 	"net/http"
@@ -10,6 +11,7 @@ import (
 )
 
 func main() {
+	config.LoadApiConfig()
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
@@ -18,5 +20,5 @@ func main() {
 		routes.BlogTagRoutes(r)
 	})
 
-	http.ListenAndServe(":3000", r)
+	http.ListenAndServe(":"+config.API_PORT, r)
 }
