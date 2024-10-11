@@ -11,6 +11,7 @@ func BlogTagRoutes(r chi.Router) {
 
 	r.Route("/blogtag", func(r chi.Router) {
 		r.Get("/count", controller.Count)
+		r.Get("/", controller.GetAll)
 		r.Post("/", controller.Create)
 		r.Patch("/", controller.Update)
 		r.Delete("/{id}", controller.Remove)

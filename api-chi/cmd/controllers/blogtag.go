@@ -4,10 +4,11 @@ import (
 	"api-chi/cmd/models"
 	"api-chi/cmd/services"
 	"api-chi/internal/message"
-	"log"
 
 	"encoding/json"
+	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
@@ -27,6 +28,53 @@ func (c *BlogTagController) Count(w http.ResponseWriter, r *http.Request) {
 
 	// Execute Count and return if failed or success
 	data, err := c.service.Count()
+	if err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		render.JSON(w, r, message.Response{
+			Message: message.GET_DATA_FAILED,
+			Data:    nil,
+		})
+		return
+	}
+
+	render.Status(r, http.StatusOK)
+	render.JSON(w, r, message.Response{
+		Message: message.GET_DATA_SUCCESS,
+		Data:    data,
+	})
+}
+
+func (c *BlogTagController) GetAll(w http.ResponseWriter, r *http.Request) {
+	// Retrieve query parameters
+	search := r.URL.Query().Get("search")
+	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+	if err != nil {
+		render.Status(r, http.StatusBadRequest)
+		render.JSON(w, r, message.Response{
+			Message: message.GET_DATA_FAILED,
+			Data:    nil,
+		})
+		return
+	}
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		render.Status(r, http.StatusBadRequest)
+		render.JSON(w, r, message.Response{
+			Message: message.GET_DATA_FAILED,
+			Data:    nil,
+		})
+		return
+	}
+
+	// Open and close database after end
+	err = c.service.Open()
+	defer c.service.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Execute Count and return if failed or success
+	data, err := c.service.GetAll(&search, &limit, &page)
 	if err != nil {
 		render.Status(r, http.StatusInternalServerError)
 		render.JSON(w, r, message.Response{
