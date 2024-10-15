@@ -4,10 +4,13 @@ export default defineNuxtConfig({
   components: true,
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
+
   postcss: {
     plugins: {
       tailwindcss: {},
       autoprefixer: {},
     },
   },
+
+  modules: ['@vesp/nuxt-fontawesome'],
 })
