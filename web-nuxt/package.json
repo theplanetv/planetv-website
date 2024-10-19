@@ -10,10 +10,13 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.5.5",
     "@vesp/nuxt-fontawesome": "^1.1.0",
-    "nuxt": "^3.13.0",
-    "vue": "latest",
-    "vue-router": "latest"
+    "axios": "^1.7.7",
+    "nuxt": "^3.13.2",
+    "vue": "^3.5.12",
+    "vue-router": "latest",
+    "pinia": "^2.2.4"
   },
   "devDependencies": {
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
