@@ -12,5 +12,8 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@vesp/nuxt-fontawesome', '@pinia/nuxt'],
+  modules: [
+    '@vesp/nuxt-fontawesome',
+    '@pinia/nuxt',
+  ],
 })
