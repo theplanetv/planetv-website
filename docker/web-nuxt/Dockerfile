@@ -1,17 +1,18 @@
-FROM node:22-alpine3.19
+FROM oven/bun:canary-alpine
 
 WORKDIR /web-nuxt
 
-COPY web-nuxt/package.json web-nuxt/package-lock.json ./
+COPY web-nuxt/package.json web-nuxt/bun.lockb ./
 
-RUN npm install
+RUN bun install
 
 COPY web-nuxt/assets ./assets
+COPY web-nuxt/components ./components
+COPY web-nuxt/libs ./libs
 COPY web-nuxt/pages ./pages
 COPY web-nuxt/public ./public
 COPY web-nuxt/server ./server
+COPY web-nuxt/stores ./stores
 COPY web-nuxt/app.vue web-nuxt/nuxt.config.ts web-nuxt/tailwind.config.ts web-nuxt/tsconfig.json ./
 
-RUN npm run build
-
-CMD ["npm", "run", "dev"]
+CMD ["bun", "run", "dev"]

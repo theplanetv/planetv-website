@@ -41,9 +41,6 @@ CREATE OR REPLACE FUNCTION get_all_blog_tag(
                 ELSE 0
             END;
 
-
-        RAISE NOTICE 'Max Page: %', max_page;
-
         -- Set default page range
         IF input_page < 1 THEN
             input_page := 0;
