@@ -13,6 +13,6 @@ COPY web-nuxt/pages ./pages
 COPY web-nuxt/public ./public
 COPY web-nuxt/server ./server
 COPY web-nuxt/stores ./stores
-COPY web-nuxt/app.vue web-nuxt/nuxt.config.ts web-nuxt/tailwind.config.ts web-nuxt/tsconfig.json ./
+COPY web-nuxt/nuxt.config.ts web-nuxt/tailwind.config.ts web-nuxt/tsconfig.json ./
 
 CMD ["bun", "run", "dev"]
