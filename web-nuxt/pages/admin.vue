@@ -37,9 +37,7 @@ if (errorData.value) {
   console.error("Error fetching data:", error.value);
 } else if (dataData.value) {
   const blogtagArray: BlogData = dataData.value.data as BlogTag[];
-  console.log(blogtagArray);
   admin.SetData(blogtagArray);
-  console.log(admin.GetData)
 }
 
 isLoading.value = (statusCount.value === 'pending' || statusData.value === 'pending'); // Set loading state based on pending
@@ -51,8 +49,7 @@ isLoading.value = (statusCount.value === 'pending' || statusData.value === 'pend
       <MenuAdmin />
       <p v-if="isLoading">Loading...</p>
       <p v-if="error">{{ error }}</p>
-      <p v-else>Count: {{ admin.GetCount }}</p>
-      <p v-for="item in admin.GetData" :key="item.id">{{ item.name }}</p>
+      <DisplayDataAdmin />
     </div>
   </ClientOnly>
 </template>
