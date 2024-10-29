@@ -33,14 +33,14 @@ test_wait_postgresql() {
 	echo "PostgreSQL is ready after $attempt_count attempts. Running the test..."
 
 	case $1 in
-		"service-blogtag" )
-		docker exec ${PROJECT_API_CONTAINER} go test -v \
-			/api-chi/cmd/services/blogtag.go /api-chi/cmd/services/blogtag_test.go
-		;;
-
-		"route-blogtag" )
+		"blogtag-route" )
 		docker exec ${PROJECT_API_CONTAINER} go test -v \
 			/api-chi/cmd/routes/blogtag.go /api-chi/cmd/routes/blogtag_test.go
+		;;
+
+		"blogtag-service" )
+		docker exec ${PROJECT_API_CONTAINER} go test -v \
+			/api-chi/cmd/services/blogtag.go /api-chi/cmd/services/blogtag_test.go
 		;;
 	esac
 }
@@ -54,11 +54,16 @@ print_list() {
 # Main script
 if [ $# -eq 1 ]; then
 	case "$1" in
-		"api-service-blogtag" )
-			test_wait_postgresql service-blogtag ;;
+		"api-auth-service" )
+		docker exec ${PROJECT_API_CONTAINER} go test -v \
+			/api-chi/cmd/services/auth.go /api-chi/cmd/services/auth_test.go
+		;;
 
-		"api-route-blogtag" )
-			test_wait_postgresql route-blogtag ;;
+		"api-blogtag-route" )
+			test_wait_postgresql blogtag-route ;;
+
+		"api-blogtag-service" )
+			test_wait_postgresql blogtag-service ;;
 
 		"coverage" )
 			docker exec ${PROJECT_API_CONTAINER} go test -coverprofile=coverage.out ./...
