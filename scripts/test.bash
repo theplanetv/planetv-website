@@ -54,6 +54,11 @@ print_list() {
 # Main script
 if [ $# -eq 1 ]; then
 	case "$1" in
+		"api-auth-route" )
+		docker exec ${PROJECT_API_CONTAINER} go test -v \
+			/api-chi/cmd/routes/auth.go /api-chi/cmd/routes/auth_test.go
+		;;
+
 		"api-auth-service" )
 		docker exec ${PROJECT_API_CONTAINER} go test -v \
 			/api-chi/cmd/services/auth.go /api-chi/cmd/services/auth_test.go
