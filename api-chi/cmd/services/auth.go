@@ -5,14 +5,44 @@ import (
 	"api-chi/cmd/models"
 	"fmt"
 	"strconv"
+	"time"
 
+	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthService struct{}
 
-func (s *AuthService) Login(input *models.Auth) error {
+func (s *AuthService) New() {
 	config.LoadAuthConfig()
+}
+
+func (s *AuthService) GenerateToken(input *models.Auth) (string, error) {
+	// Set token expiration time (e.g., 1 hour)
+	expirationTime := time.Now().Add(1 * time.Hour).Unix()
+
+	// Create JWT claims, which includes the user ID and expiration time
+	claims := jwt.MapClaims{
+		"username": input.Username,
+		"exp":      expirationTime,
+	}
+
+	// Create a new token with claims
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	// Retrieve the secret key from config
+	secretKey := []byte(config.AUTH_SECRET_KEY)
+
+	// Sign the token with the secret key
+	tokenString, err := token.SignedString(secretKey)
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
+}
+
+func (s *AuthService) Login(input *models.Auth) error {
 	if config.AUTH_BCRYPT_COST == "" {
 		config.AUTH_BCRYPT_COST = "10"
 	}
