@@ -13,6 +13,7 @@ import (
 
 func main() {
 	// Load configurations for the API and Web
+	config.LoadAuthConfig()
 	config.LoadApiConfig()
 	config.LoadWebConfig()
 
@@ -33,7 +34,8 @@ func main() {
 
 	// Define the /api route and its subroutes
 	r.Route("/api", func(r chi.Router) {
-		routes.BlogTagRoutes(r) // Route handler for /api/blogtag
+		routes.AuthRoutes(r)
+		routes.BlogTagRoutes(r)
 	})
 
 	// Start the HTTP server on the specified API port
