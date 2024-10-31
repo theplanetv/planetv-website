@@ -20,7 +20,7 @@ enter-nix-dev-shell:
   script:
     - nix develop .
 
-test-service-blogtag-docker:
+test-auth-service-docker:
   stage: test
   needs:
     - build-docker
@@ -29,9 +29,9 @@ test-service-blogtag-docker:
     - docker:dind
   script:
     - docker-compose up -d database-postgresql api-chi
-    - sh scripts/test.bash api-service-blogtag
+    - sh scripts/test.bash api-auth-service
 
-test-route-blogtag-docker:
+test-auth-route-docker:
   stage: test
   needs:
     - build-docker
@@ -40,7 +40,29 @@ test-route-blogtag-docker:
     - docker:dind
   script:
     - docker-compose up -d database-postgresql api-chi
-    - sh scripts/test.bash api-route-blogtag
+    - sh scripts/test.bash api-auth-route
+
+test-blogtag-service-docker:
+  stage: test
+  needs:
+    - build-docker
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker-compose up -d database-postgresql api-chi
+    - sh scripts/test.bash api-blogtag-service
+
+test-blogtag-route-docker:
+  stage: test
+  needs:
+    - build-docker
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker-compose up -d database-postgresql api-chi
+    - sh scripts/test.bash api-blogtag-route
 
 linting-api-chi:
   stage: lint
