@@ -35,7 +35,7 @@ test_wait_postgresql() {
 	case $1 in
 		"blogtag-route" )
 		docker exec ${PROJECT_API_CONTAINER} go test -v \
-			/api-chi/cmd/routes/blogtag.go /api-chi/cmd/routes/blogtag_test.go
+			/api-chi/cmd/routes/auth.go /api-chi/cmd/routes/blogtag.go /api-chi/cmd/routes/blogtag_test.go
 		;;
 
 		"blogtag-service" )
@@ -54,6 +54,11 @@ print_list() {
 # Main script
 if [ $# -eq 1 ]; then
 	case "$1" in
+		"api-auth-middleware" )
+		docker exec ${PROJECT_API_CONTAINER} go test -v \
+			/api-chi/cmd/middlewares/auth.go /api-chi/cmd/middlewares/auth_test.go
+		;;
+
 		"api-auth-route" )
 		docker exec ${PROJECT_API_CONTAINER} go test -v \
 			/api-chi/cmd/routes/auth.go /api-chi/cmd/routes/auth_test.go

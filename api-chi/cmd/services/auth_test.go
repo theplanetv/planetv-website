@@ -68,4 +68,21 @@ func Test_AuthService(t *testing.T) {
 		exp := int64(claims["exp"].(float64))
 		assert.Greater(t, exp, time.Now().Unix())
 	})
+
+	t.Run("ValidateToken success", func(t *testing.T) {
+		// Input data for token generation
+		input := &models.Auth{
+			Username: "admin",
+		}
+
+		// Generate a valid token
+		tokenString, err := service.GenerateToken(input)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, tokenString)
+
+		// Validate the generated token
+		valid, err := service.ValidateToken(tokenString)
+		assert.NoError(t, err)
+		assert.True(t, valid)
+	})
 }

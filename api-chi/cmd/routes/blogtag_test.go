@@ -2,6 +2,7 @@ package routes
 
 import (
 	"api-chi/cmd/models"
+	"api-chi/cmd/services"
 	"api-chi/internal/message"
 
 	"bytes"
@@ -19,6 +20,13 @@ func Test_BlogTagRoutes(t *testing.T) {
 	r := chi.NewRouter()
 	BlogTagRoutes(r)
 	id := ""
+	service := services.AuthService{}
+	token, _ := service.GenerateToken(&models.Auth{Username: "admin"})
+
+	authCookie := &http.Cookie{
+		Name:  "Authorization",
+		Value: token,
+	}
 
 	t.Run("Count success", func(t *testing.T) {
 		req := httptest.NewRequest("GET", "/blogtag/count", nil)
@@ -57,6 +65,7 @@ func Test_BlogTagRoutes(t *testing.T) {
 		body, _ := json.Marshal(input)
 
 		req := httptest.NewRequest("POST", "/blogtag", bytes.NewBuffer(body))
+		req.AddCookie(authCookie)
 		res := httptest.NewRecorder()
 
 		r.ServeHTTP(res, req)
@@ -87,6 +96,7 @@ func Test_BlogTagRoutes(t *testing.T) {
 		body, _ := json.Marshal(input)
 
 		req := httptest.NewRequest("PATCH", "/blogtag", bytes.NewBuffer(body))
+		req.AddCookie(authCookie)
 		res := httptest.NewRecorder()
 
 		r.ServeHTTP(res, req)
@@ -105,6 +115,7 @@ func Test_BlogTagRoutes(t *testing.T) {
 		}
 
 		req := httptest.NewRequest("DELETE", "/blogtag/"+id, nil)
+		req.AddCookie(authCookie)
 		res := httptest.NewRecorder()
 
 		r.ServeHTTP(res, req)

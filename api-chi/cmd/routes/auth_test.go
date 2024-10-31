@@ -37,7 +37,7 @@ func Test_AuthRoutes(t *testing.T) {
 		assert.Equal(t, http.StatusOK, res.Code)
 
 		// Parse the response body
-		var response message.Response
+		response := message.Response{}
 		err := json.NewDecoder(res.Body).Decode(&response)
 		assert.NoError(t, err)
 		assert.Equal(t, message.LOGIN_SUCCESS, response.Message)
@@ -83,7 +83,7 @@ func Test_AuthRoutes(t *testing.T) {
 		assert.True(t, authTokenCookie.Expires.Before(time.Now()))
 
 		// Parse and validate JSON response
-		var response message.Response
+		response := message.Response{}
 		err := json.NewDecoder(recorder.Body).Decode(&response)
 		assert.NoError(t, err)
 		assert.Equal(t, message.LOGOUT_SUCCESS, response.Message)
