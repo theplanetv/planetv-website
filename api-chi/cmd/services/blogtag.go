@@ -82,14 +82,14 @@ func (s *BlogTagService) GetAll(search *string, limit *int, page *int) ([]models
 	return value, nil
 }
 
-func (s *BlogTagService) Create(input *models.BlogTag) (string, error) {
+func (s *BlogTagService) Create(input *models.BlogTag) (models.BlogTag, error) {
 	// Execute SQL
 	sql := "SELECT * FROM create_blog_tag(@name);"
 	args := pgx.NamedArgs{
 		"name": input.Name,
 	}
-	value := ""
-	err := s.Conn.QueryRow(config.CTX, sql, args).Scan(&value)
+	value := models.BlogTag{}
+	err := s.Conn.QueryRow(config.CTX, sql, args).Scan(&value.Id, &value.Name)
 	if err != nil {
 		return value, err
 	}
