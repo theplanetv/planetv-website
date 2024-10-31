@@ -60,16 +60,21 @@ CREATE OR REPLACE FUNCTION get_all_blog_tag(
 CREATE OR REPLACE FUNCTION create_blog_tag(
         input_name TEXT
     )
-    RETURNS UUID
+    RETURNS TABLE (
+        id   UUID,
+        name TEXT
+    )
     AS $$
     DECLARE
         return_id UUID;
     BEGIN
         INSERT INTO blog_tag (name)
         VALUES (input_name)
-        RETURNING id INTO return_id;
+        RETURNING blog_tag.id INTO return_id;
 
-        RETURN return_id;
+        RETURN QUERY
+            SELECT blog_tag.id, blog_tag.name FROM blog_tag
+            WHERE blog_tag.id = return_id;
     END;
     $$ LANGUAGE plpgsql;
 

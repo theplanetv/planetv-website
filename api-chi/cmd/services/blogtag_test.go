@@ -159,9 +159,10 @@ func Test_BlogTagService(t *testing.T) {
 		value, err := service.Create(&input)
 		assert.NoError(t, err)
 		assert.NotEmpty(t, value)
+		assert.Equal(t, value.Name, input.Name)
 
 		// Assign value to id
-		id = value
+		id = value.Id
 	})
 
 	t.Run("Update success", func(t *testing.T) {
