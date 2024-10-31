@@ -77,11 +77,16 @@ func Test_BlogTagRoutes(t *testing.T) {
 		assert.Equal(t, message.CREATE_DATA_SUCCESS, response.Message)
 		assert.NotNil(t, response.Data)
 
-		idValue, ok := response.Data.(string)
+		// Convert response.Data to map to extract BlogTag
+		dataMap, ok := response.Data.(map[string]interface{})
 		if !ok {
-			t.Fatalf("Expected response.Data to be of type string, got %T", response.Data)
+			t.Fatalf("Expected response.Data to be a map, got %T", response.Data)
 		}
-		id = idValue
+
+		// Extract id from the BlogTag data
+		id = dataMap["id"].(string)
+		assert.NotEmpty(t, id)
+		assert.Equal(t, "test tag", dataMap["name"])
 	})
 
 	t.Run("Update success", func(t *testing.T) {
