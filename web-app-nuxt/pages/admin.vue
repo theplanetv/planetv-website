@@ -1,66 +1,162 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useFetch } from 'nuxt/app';
-
+import { ref, onMounted, watch } from 'vue';
 import { API_URL } from '@/libs/api/config';
 import type { BlogData, ResponseData } from '@/libs/types/response';
 import type { BlogTag } from '@/libs/types/types';
+
+// Column for table
+const columns = [
+  {
+    key: 'id',
+    label: 'Id',
+  },
+  {
+    key: 'name',
+    label: 'Name'
+  },
+  {
+    key: 'actions'
+  },
+]
+const actionItems = (row: any) => [
+  [
+    {
+      label: 'Edit',
+      icon: 'i-heroicons-pencil-square-20-solid',
+      click: () => console.log('Edit', row.id)
+    },
+    {
+      label: 'Delete',
+      icon: 'i-heroicons-trash-20-solid'
+    }
+  ]
+]
+
 
 const activeOption = ref<string>("blogtag");
 const limit = ref<number>(10);
 const page = ref<number>(1);
 const search = ref<string>("");
 const count = ref<number>(0);
-const data = ref<BlogData>([]); // Changed type to BlogTag[]
+const data = ref<BlogData>([]); 
+const loading = ref<boolean>(false);
+const error = ref<string | null>(null);
 
-// Fetching the count using useFetch
-const { data: dataCount } = await useFetch<ResponseData>('/blogtag/count', {
-  baseURL: API_URL,
+// Function to fetch count
+async function fetchCount() {
+  try {
+    const response = await fetch(`${API_URL}/blogtag/count`);
+    if (!response.ok) throw new Error('Failed to fetch count');
+    
+    const result: ResponseData = await response.json();
+    if (result.data !== undefined) {
+      const valueInt = Number(result.data);
+      if (!isNaN(valueInt)) {
+        count.value = valueInt;
+      }
+    }
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Failed to fetch count';
+    console.error('Error fetching count:', err);
+  }
+}
+
+// Function to fetch data
+async function fetchData() {
+  loading.value = true;
+  error.value = null;
+  
+  try {
+    const response = await fetch(
+      `${API_URL}/${activeOption.value}?search=${search.value}&limit=${limit.value}&page=${page.value}`
+    );
+    
+    if (!response.ok) throw new Error('Failed to fetch data');
+    
+    const result: ResponseData = await response.json();
+    if (result.data && Array.isArray(result.data)) {
+      data.value = result.data as BlogTag[];
+    }
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Failed to fetch data';
+    console.error('Error fetching data:', err);
+    data.value = [];
+  } finally {
+    loading.value = false;
+  }
+}
+
+// Initial fetch on component mount
+onMounted(async () => {
+  await Promise.all([fetchCount(), fetchData()]);
 });
 
-const { data: dataData } = await useFetch<ResponseData>(
-  `/${activeOption.value}?search=${search.value}&limit=${limit.value}&page=${page.value}`,
-  {
-    baseURL: API_URL,
-  }
-);
+// Watch for changes in dependencies and refetch data
+watch([page, search, activeOption], () => {
+  fetchData();
+});
 
-// Type guard function to check if value is BlogTag[]
-function isBlogTagArray(value: unknown): value is BlogTag[] {
-  return Array.isArray(value) && value.every(item => 
-    typeof item === 'object' && item !== null
-    // Add more specific checks based on BlogTag interface
-  );
-}
-
-// Handle count data
-if (dataCount.value?.data !== undefined) {
-  const valueInt = Number(dataCount.value.data);
-  if (!isNaN(valueInt)) {
-    count.value = valueInt;
-  } else {
-    console.warn("Count value is not a valid number");
-  }
-}
-
-// Handle blog data
-if (dataData.value?.data !== undefined) {
-  if (isBlogTagArray(dataData.value.data)) {
-    data.value = dataData.value.data as BlogTag[];
-  } else {
-    console.warn("Received data is not in the expected BlogTag[] format");
-    data.value = []; // Reset to empty array if data is invalid
-  }
-}
-
-console.log(count.value);
-console.log(data.value);
+// Optional: Watch for changes in activeOption to refetch count
+watch(activeOption, () => {
+  fetchCount();
+});
 </script>
 
 <template>
-  <ClientOnly>
   <div class="flex">
     <MenuAdmin />
+
+    <div class="mx-auto py-10 w-fit flex flex-col items-center">
+      <!-- Loading state -->
+      <div v-if="loading" class="text-center py-4">
+        Loading...
+      </div>
+
+      <!-- Error state -->
+      <div v-if="error" class="text-red-500 py-4">
+        {{ error }}
+      </div>
+
+      <!-- Content -->
+      <template v-if="!loading && !error">
+        <UPagination 
+          v-model="page"
+          :page-count="limit"
+          :total="count"
+          :first-button="{ icon: 'i-heroicons-arrow-small-left-20-solid', color: 'gray' }"
+          :last-button="{ icon: 'i-heroicons-arrow-small-right-20-solid', trailing: true, color: 'gray' }"
+          show-first
+          show-last
+        />
+
+        <div class="my-5 flex justify-between items-center w-full gap-4">
+          <UInput 
+            v-model="search" 
+            placeholder="Search" 
+            class="w-64"
+          />
+          <UButton
+            icon="i-heroicons-plus-circle"
+            size="sm"
+            color="primary"
+            variant="solid"
+            label="Add"
+            :trailing="false"
+          />
+        </div>
+
+        <UTable class="my-5" :columns="columns" :rows="data">
+          <template #name-data="{ row }">
+            <span>{{ row.name }}</span>
+          </template>
+
+          <template #actions-data="{ row }">
+            <UDropdown :items="actionItems(row)">
+              <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+            </UDropdown>
+          </template>
+        </UTable>
+      </template>
+    </div>
   </div>
-  </ClientOnly>
 </template>
