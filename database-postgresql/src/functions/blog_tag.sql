@@ -1,10 +1,14 @@
-CREATE OR REPLACE FUNCTION count_blog_tag()
+CREATE OR REPLACE FUNCTION count_blog_tag(
+        input_search TEXT
+    )
     RETURNS NUMERIC
     AS $$
     DECLARE
         value_count NUMERIC;
     BEGIN
-        SELECT COUNT(id) INTO value_count FROM blog_tag;
+        SELECT COUNT(id) INTO value_count
+        FROM blog_tag
+        WHERE blog_tag.name ILIKE '%' || input_search || '%';
 
         RETURN value_count;
     END;
@@ -25,7 +29,7 @@ CREATE OR REPLACE FUNCTION get_all_blog_tag(
         max_page    NUMERIC;
     BEGIN
         -- Get count
-        SELECT count_blog_tag() INTO value_count;
+        SELECT count_blog_tag(input_search) INTO value_count;
 
         -- Set default limit range
         IF input_limit < 10 THEN
