@@ -10,6 +10,11 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     '@nuxt/ui',
-    '@pinia/nuxt',
+    [
+      '@pinia/nuxt',
+      {
+        autoImports: ['defineStore', 'storeToRefs'],
+      },
+    ],
   ]
 })

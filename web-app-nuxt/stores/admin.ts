@@ -1,91 +1,84 @@
-import { defineStore } from 'pinia';
-
-import type { BlogData } from '@/libs/types/response';
+// stores/admin.ts
+import { defineStore } from 'pinia'
+import type { BlogData, ResponseData } from '@/libs/types/response'
+import { API_URL } from '~/libs/api/config'
 
 export enum MenuOptionAdmin {
-  Tag = "TAG",
-  File = "FILE",
+  Tag = "blogtag",
+  File = "blogfile",
 }
 
 export const useAdminStore = defineStore('admin', () => {
+  // const config = useRuntimeConfig()
+  
   // State
-  const limit = ref<number>(10);
-  const page = ref<number>(1);
-  const search = ref<string>("");
-  const activeOption = ref<MenuOptionAdmin>(MenuOptionAdmin.Tag);
-  const count = ref<number>(0);
-  const data = ref<BlogData>([]);
+  const limit = ref<number>(10)
+  const page = ref<number>(1)
+  const search = ref<string>('')
+  const activeOption = ref<MenuOptionAdmin>(MenuOptionAdmin.Tag)
+  const count = ref<number>(0)
+  const data = ref<BlogData>([])
+  const loading = ref<boolean>(false)
+  const error = ref<string | null>(null)
 
-  // Actions
-  const nextPage = (): void => {
-    page.value++;
-  }
-  const previousPage = (): void => {
-    if (page.value <= 1) {
-      page.value = 1;
-      return;
+  // Fetch count
+  const fetchCount = async (): Promise<void> => {
+    try {
+      const endpoint = `${API_URL}/${activeOption.value.toLowerCase()}/count`
+      
+      const result = await $fetch<ResponseData>(endpoint, {
+        method: 'GET',
+        params: {
+          search: search.value
+        }
+      })
+      count.value = Number(result.data) || 0
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to fetch count'
+      console.error('Error fetching count:', err)
     }
-    page.value--;
-  }
-  const firstPage = (): void => {
-    page.value = 1;
-  }
-  const lastPage = (): void => {
-    page.value = Math.ceil(count.value / limit.value) + 1;
-  }
-  const setPage = (newPage: number): void => {
-    page.value = newPage;
   }
 
-  const SetActiveOption = (option: MenuOptionAdmin): void => {
-    activeOption.value = option;
-  }
-  const SetCount = (input: number): void => {
-    count.value = input;
-  }
-  const SetData = (input: BlogData): void => {
-    data.value = input;
-  }
+  // Fetch data
+  const fetchData = async (): Promise<void> => {
+    loading.value = true
+    error.value = null
 
-  // Getters
-  const GetLimit = computed(() => limit.value);
-  const GetPage = computed(() => page.value);
-  const GetSearch = computed(() => search.value);
-  const getActiveOption = computed(() => activeOption.value);
-  const GetCount = computed(() => count.value);
-  const GetData = computed(() => data.value);
+    try {
+      const endpoint = `${API_URL}/${activeOption.value.toLowerCase()}`
+      
+      const result = await $fetch<ResponseData>(endpoint, {
+        method: 'GET',
+        params: {
+          search: search.value,
+          limit: limit.value,
+          page: page.value
+        }
+      })
+
+      data.value = result.data as BlogData || []
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to fetch data'
+      console.error('Error fetching data:', err)
+      data.value = []
+    } finally {
+      loading.value = false
+    }
+  }
 
   return {
-    // limit
-    GetLimit,
-
-    // page
+    // State
+    limit,
     page,
-    nextPage,
-    previousPage,
-    firstPage,
-    lastPage,
-    setPage,
-    GetPage,
-
-    // search
     search,
-    GetSearch,
-
-    // activeOption
-    getActiveOption,
-
-    // count
+    activeOption,
     count,
-    SetCount,
-    GetCount,
-
-    // data
     data,
-    SetData,
-    GetData,
+    loading,
+    error,
 
-    // activeOption
-    SetActiveOption
-  };
-});
+    // Actions
+    fetchCount,
+    fetchData,
+  }
+})
