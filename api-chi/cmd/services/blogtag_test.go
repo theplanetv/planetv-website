@@ -18,10 +18,29 @@ func Test_BlogTagService(t *testing.T) {
 		defer service.Close()
 		assert.NoError(t, err)
 
+		// Declare input
+		search := ""
+
 		// Count database
-		count, err := service.Count()
+		count, err := service.Count(&search)
 		assert.NoError(t, err)
 		assert.Greater(t, count, 0)
+	})
+
+	t.Run("Count success with search", func(t *testing.T) {
+		// Connect database
+		err := service.Open()
+		defer service.Close()
+		assert.NoError(t, err)
+
+		// Declare input
+		search := "tag 1"
+
+		// Count database
+		count, err := service.Count(&search)
+		assert.NoError(t, err)
+		assert.Greater(t, count, 0)
+		assert.Less(t, count, 60)
 	})
 
 	t.Run("GetAll default success", func(t *testing.T) {

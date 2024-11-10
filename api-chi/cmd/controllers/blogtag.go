@@ -19,6 +19,9 @@ type BlogTagController struct {
 }
 
 func (c *BlogTagController) Count(w http.ResponseWriter, r *http.Request) {
+	// Retrieve query parameters
+	search := r.URL.Query().Get("search")
+
 	// Open and close database after end
 	err := c.service.Open()
 	defer c.service.Close()
@@ -27,7 +30,7 @@ func (c *BlogTagController) Count(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Execute Count and return if failed or success
-	data, err := c.service.Count()
+	data, err := c.service.Count(&search)
 	if err != nil {
 		render.Status(r, http.StatusInternalServerError)
 		render.JSON(w, r, message.Response{

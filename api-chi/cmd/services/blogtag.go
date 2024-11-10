@@ -28,11 +28,14 @@ func (s *BlogTagService) Close() {
 	s.Conn.Close()
 }
 
-func (s *BlogTagService) Count() (int, error) {
+func (s *BlogTagService) Count(search *string) (int, error) {
 	// Execute SQL
-	sql := "SELECT * FROM count_blog_tag();"
+	sql := "SELECT * FROM count_blog_tag(@search);"
+	args := pgx.NamedArgs{
+		"search": *search,
+	}
 	value := 0
-	err := s.Conn.QueryRow(config.CTX, sql).Scan(&value)
+	err := s.Conn.QueryRow(config.CTX, sql, args).Scan(&value)
 	if err != nil {
 		return value, err
 	}
