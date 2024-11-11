@@ -1,84 +1,148 @@
 // stores/admin.ts
 import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
 import type { BlogData, ResponseData } from '@/libs/types/response'
-import { API_URL } from '~/libs/api/config'
+import { API_URL } from '@/libs/api/config'
 
+// Enums
 export enum MenuOptionAdmin {
   Tag = "blogtag",
   File = "blogfile",
 }
 
-export const useAdminStore = defineStore('admin', () => {
-  // const config = useRuntimeConfig()
-  
-  // State
-  const limit = ref<number>(10)
-  const page = ref<number>(1)
-  const search = ref<string>('')
-  const activeOption = ref<MenuOptionAdmin>(MenuOptionAdmin.Tag)
-  const count = ref<number>(0)
-  const data = ref<BlogData>([])
-  const loading = ref<boolean>(false)
-  const error = ref<string | null>(null)
+// Interface for state
+interface AdminState {
+  limit: number
+  page: number
+  search: string
+  activeOption: MenuOptionAdmin
+  count: number
+  data: BlogData
+  displayForm: boolean
+  loading: boolean
+  error: string | null
+}
 
-  // Fetch count
+// Define store
+export const useAdminStore = defineStore('admin', () => {
+  // State with proper typing
+  const state = ref<AdminState>({
+    limit: 10,
+    page: 1,
+    search: '',
+    activeOption: MenuOptionAdmin.Tag,
+    count: 0,
+    data: [],
+    displayForm: false,
+    loading: false,
+    error: null
+  })
+
+  // Getters
+  const getDisplayForm = computed(() => state.value.displayForm)
+  const getData = computed(() => state.value.data)
+  const getLoading = computed(() => state.value.loading)
+  const getError = computed(() => state.value.error)
+  const getCount = computed(() => state.value.count)
+  const getCurrentPage = computed(() => state.value.page)
+  const getLimit = computed(() => state.value.limit)
+
+  // Actions
   const fetchCount = async (): Promise<void> => {
     try {
-      const endpoint = `${API_URL}/${activeOption.value.toLowerCase()}/count`
-      
+      const endpoint = `${API_URL}/${state.value.activeOption.toLowerCase()}/count`
       const result = await $fetch<ResponseData>(endpoint, {
         method: 'GET',
         params: {
-          search: search.value
+          search: state.value.search
         }
       })
-      count.value = Number(result.data) || 0
+      
+      state.value.count = Number(result.data) || 0
     } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to fetch count'
+      state.value.error = err instanceof Error ? err.message : 'Failed to fetch count'
       console.error('Error fetching count:', err)
     }
   }
 
-  // Fetch data
   const fetchData = async (): Promise<void> => {
-    loading.value = true
-    error.value = null
+    state.value.loading = true
+    state.value.error = null
 
     try {
-      const endpoint = `${API_URL}/${activeOption.value.toLowerCase()}`
-      
+      const endpoint = `${API_URL}/${state.value.activeOption.toLowerCase()}`
       const result = await $fetch<ResponseData>(endpoint, {
         method: 'GET',
         params: {
-          search: search.value,
-          limit: limit.value,
-          page: page.value
+          search: state.value.search,
+          limit: state.value.limit,
+          page: state.value.page
         }
       })
-
-      data.value = result.data as BlogData || []
+      
+      state.value.data = result.data as BlogData || []
     } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to fetch data'
+      state.value.error = err instanceof Error ? err.message : 'Failed to fetch data'
       console.error('Error fetching data:', err)
-      data.value = []
+      state.value.data = []
     } finally {
-      loading.value = false
+      state.value.loading = false
+    }
+  }
+
+  // Mutations
+  const updateDisplayForm = () => {
+    state.value.displayForm = !state.value.displayForm
+  }
+
+  const setPage = (newPage: number) => {
+    state.value.page = newPage
+  }
+
+  const setSearch = (searchTerm: string) => {
+    state.value.search = searchTerm
+  }
+
+  const setActiveOption = (option: MenuOptionAdmin) => {
+    state.value.activeOption = option
+  }
+
+  const resetState = () => {
+    state.value = {
+      limit: 10,
+      page: 1,
+      search: '',
+      activeOption: MenuOptionAdmin.Tag,
+      count: 0,
+      data: [],
+      displayForm: false,
+      loading: false,
+      error: null
     }
   }
 
   return {
     // State
-    limit,
-    page,
-    search,
-    activeOption,
-    count,
-    data,
-    loading,
-    error,
-
+    state,
+    
+    // Getters
+    getDisplayForm,
+    getData,
+    getLoading,
+    getError,
+    getCount,
+    getCurrentPage,
+    getLimit,
+    
     // Actions
     fetchCount,
     fetchData,
+    
+    // Mutations
+    updateDisplayForm,
+    setPage,
+    setSearch,
+    setActiveOption,
+    resetState
   }
 })
