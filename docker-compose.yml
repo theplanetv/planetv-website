@@ -46,9 +46,9 @@ services:
       network:
         ipv4_address: ${POSTGRES_PUBLIC_HOST}
 
-  web-app-nuxt:
+  web-app-next:
     build:
-      dockerfile: ./docker/web-app-nuxt/Dockerfile
+      dockerfile: ./docker/web-app-next/Dockerfile
     ports:
       - '${WEB_PUBLIC_PORT}:${WEB_PORT}'
     environment:
