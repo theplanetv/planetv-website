@@ -20,6 +20,12 @@ if [ $# -eq 1 ]; then
     docker rmi ${PROJECT_DATABASE_IMAGE} ${PROJECT_API_IMAGE} ${PROJECT_WEB_IMAGE}
     ;;
 
+  "rebuild")
+    docker compose down
+    docker rmi ${PROJECT_DATABASE_IMAGE} ${PROJECT_API_IMAGE} ${PROJECT_WEB_IMAGE}
+    docker compose up -d
+    ;;
+
   *)
     print_list
     ;;
