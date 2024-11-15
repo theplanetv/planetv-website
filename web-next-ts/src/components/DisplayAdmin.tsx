@@ -2,10 +2,11 @@
 
 import { FormStatusEnum } from "@/libs/enum";
 import { BlogData, BlogTag } from "@/libs/type";
-import { Checkbox, Table, Pagination } from "flowbite-react";
+import { Checkbox, Table, Pagination, Button } from "flowbite-react";
 import { useState, useRef } from "react";
 import { FaEdit, FaPlusCircle, FaTrash } from "react-icons/fa";
 import FormAdmin from "./FormAdmin";
+import FloatingLabelText from "./label/FloatingLabelText";
 
 type Props = {
   formStatus: FormStatusEnum
@@ -34,29 +35,32 @@ export default function DisplayAdmin(props: Props): JSX.Element {
   }
 
   return (
-    <div className="mx-auto w-fit flex flex-col gap-y-10 items-center">
+    <div className="mx-auto w-fit py-10 flex flex-col gap-y-10 items-center">
       <FormAdmin formStatus={props.formStatus} handleFormStatus={props.handleFormStatus} />
 
       <Pagination currentPage={props.page} totalPages={props.handleTotalPage()} onPageChange={props.handlePageChange} />
 
       <div className="w-full flex justify-between">
-        <input
-          ref={inputRef}
+        <FloatingLabelText
           type="text"
+          label="Search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={handleBlur}
-          placeholder="Search"
           className="w-200 p-2 border rounded"
         />
 
-        <button
-          className="p-2 border border-green-500 rounded bg-green-500 items-center group hover:text-green-500 hover:bg-white"
+        <Button
+          color="success"
+
           onClick={() => props.handleFormStatus(FormStatusEnum.INSERT)}
         >
-          <FaPlusCircle className="text-md text-white group-hover:text-green-500" />
-        </button>
+          <div className="flex items-center gap-x-1">
+            <FaPlusCircle />
+            <span>Insert</span>
+          </div>
+        </Button>
       </div>
 
       <div className="overflow-x-auto">
@@ -79,18 +83,32 @@ export default function DisplayAdmin(props: Props): JSX.Element {
                     <Table.Cell className="p-4">
                       <Checkbox />
                     </Table.Cell>
+
                     <Table.Cell>
                       {index}
                     </Table.Cell>
+
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                       {row.id}
                     </Table.Cell>
+
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                       {row.name}
                     </Table.Cell>
+
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white flex gap-x-2">
-                      <FaEdit className="hover:text-blue-500 hover:cursor-pointer" />
-                      <FaTrash className="hover:text-red-500 hover:cursor-pointer" />
+                      <Button color="blue" className="flex items-center gap-x-2">
+                        <div className="flex items-center gap-x-1">
+                          <FaEdit />
+                          <span>Update</span>
+                        </div>
+                      </Button>
+                      <Button color="failure">
+                        <div className="flex items-center gap-x-1">
+                          <FaTrash />
+                          <span>Remove</span>
+                        </div>
+                      </Button>
                     </Table.Cell>
                   </Table.Row>
                 )
