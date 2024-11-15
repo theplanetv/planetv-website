@@ -2,11 +2,10 @@
 
 import { FormStatusEnum } from "@/libs/enum";
 import { BlogData, BlogTag } from "@/libs/type";
-import { Checkbox, Table, Pagination, Button } from "flowbite-react";
+import { Checkbox, Table, Pagination, Button, FloatingLabel } from "flowbite-react";
 import { useState, useRef } from "react";
 import { FaEdit, FaPlusCircle, FaTrash } from "react-icons/fa";
 import FormAdmin from "./FormAdmin";
-import FloatingLabelText from "./label/FloatingLabelText";
 
 type Props = {
   formStatus: FormStatusEnum
@@ -41,19 +40,19 @@ export default function DisplayAdmin(props: Props): JSX.Element {
       <Pagination currentPage={props.page} totalPages={props.handleTotalPage()} onPageChange={props.handlePageChange} />
 
       <div className="w-full flex justify-between">
-        <FloatingLabelText
-          type="text"
+        <FloatingLabel
+          variant="outlined"
           label="Search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={handleBlur}
-          className="w-200 p-2 border rounded"
+          type="text"
+          className="w-200"
         />
 
         <Button
           color="success"
-
           onClick={() => props.handleFormStatus(FormStatusEnum.INSERT)}
         >
           <div className="flex items-center gap-x-1">
@@ -97,13 +96,17 @@ export default function DisplayAdmin(props: Props): JSX.Element {
                     </Table.Cell>
 
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white flex gap-x-2">
-                      <Button color="blue" className="flex items-center gap-x-2">
+                      <Button color="blue" className="flex items-center gap-x-2"
+                        onClick={() => props.handleFormStatus(FormStatusEnum.UPDATE)}
+                      >
                         <div className="flex items-center gap-x-1">
                           <FaEdit />
                           <span>Update</span>
                         </div>
                       </Button>
-                      <Button color="failure">
+                      <Button color="failure"
+                        onClick={() => props.handleFormStatus(FormStatusEnum.REMOVE)}
+                      >
                         <div className="flex items-center gap-x-1">
                           <FaTrash />
                           <span>Remove</span>
