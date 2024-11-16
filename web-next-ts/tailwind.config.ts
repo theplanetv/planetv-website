@@ -1,5 +1,8 @@
 import type { Config } from "tailwindcss";
-import { content as flowbiteContent, plugin as flowbitePlugin } from "flowbite-react/tailwind";
+import {
+  content as flowbiteContent,
+  plugin as flowbitePlugin,
+} from "flowbite-react/tailwind";
 
 export default {
   content: [
@@ -16,8 +19,5 @@ export default {
       },
     },
   },
-  plugins: [
-    flowbitePlugin(),
-  ],
+  plugins: [flowbitePlugin()],
 } satisfies Config;
-

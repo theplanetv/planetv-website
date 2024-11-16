@@ -1,5 +1,5 @@
-import Footer from "@/components/Footer"
-import Menu from "@/components/Menu"
+import Footer from "@/components/Footer";
+import Menu from "@/components/Menu";
 
 export default function BlogsPage(): JSX.Element {
   return (
@@ -10,5 +10,5 @@ export default function BlogsPage(): JSX.Element {
 
       <Footer />
     </>
-  )
+  );
 }

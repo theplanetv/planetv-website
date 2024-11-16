@@ -5,10 +5,10 @@ import { Drawer, Sidebar } from "flowbite-react";
 import { FaFile, FaTag } from "react-icons/fa6";
 
 type Props = {
-  showMenu: boolean
-  handleCloseMenu: () => void
-  handleActiveOption: (option: ActiveOptionEnum) => void
-}
+  showMenu: boolean;
+  handleCloseMenu: () => void;
+  handleActiveOption: (option: ActiveOptionEnum) => void;
+};
 
 export default function SidebarAdmin(props: Props): JSX.Element {
   return (
@@ -24,10 +24,22 @@ export default function SidebarAdmin(props: Props): JSX.Element {
               <div>
                 <Sidebar.Items>
                   <Sidebar.ItemGroup>
-                    <Sidebar.Item className="hover:cursor-pointer" icon={FaTag} onClick={() => props.handleActiveOption(ActiveOptionEnum.BLOGTAG)}>
+                    <Sidebar.Item
+                      className="hover:cursor-pointer"
+                      icon={FaTag}
+                      onClick={() =>
+                        props.handleActiveOption(ActiveOptionEnum.BLOGTAG)
+                      }
+                    >
                       Blog Tag
                     </Sidebar.Item>
-                    <Sidebar.Item className="hover:cursor-pointer" icon={FaFile} onClick={() => props.handleActiveOption(ActiveOptionEnum.BLOGFILE)}>
+                    <Sidebar.Item
+                      className="hover:cursor-pointer"
+                      icon={FaFile}
+                      onClick={() =>
+                        props.handleActiveOption(ActiveOptionEnum.BLOGFILE)
+                      }
+                    >
                       Blog File
                     </Sidebar.Item>
                   </Sidebar.ItemGroup>
@@ -40,4 +52,3 @@ export default function SidebarAdmin(props: Props): JSX.Element {
     </>
   );
 }
-

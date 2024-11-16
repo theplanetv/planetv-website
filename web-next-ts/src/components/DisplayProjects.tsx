@@ -10,10 +10,24 @@ export default function DisplayProjects(): JSX.Element {
         <H2>Open source projects</H2>
 
         <div>
-          <li><a className="underline" href="https://github.com/theplanetv/planetv-website">PlanetV Website</a></li>
-          <li><a className="underline" href="https://github.com/BambooEngine/ibus-bamboo">ibus-bamboo</a></li>
+          <li>
+            <a
+              className="underline"
+              href="https://github.com/theplanetv/planetv-website"
+            >
+              PlanetV Website
+            </a>
+          </li>
+          <li>
+            <a
+              className="underline"
+              href="https://github.com/BambooEngine/ibus-bamboo"
+            >
+              ibus-bamboo
+            </a>
+          </li>
         </div>
       </ul>
     </div>
-  )
+  );
 }

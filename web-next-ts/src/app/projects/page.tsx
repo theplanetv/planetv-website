@@ -1,6 +1,6 @@
-import DisplayProjects from "@/components/DisplayProjects"
-import Footer from "@/components/Footer"
-import Menu from "@/components/Menu"
+import DisplayProjects from "@/components/DisplayProjects";
+import Footer from "@/components/Footer";
+import Menu from "@/components/Menu";
 
 export default function ProjectsPage(): JSX.Element {
   return (
@@ -11,5 +11,5 @@ export default function ProjectsPage(): JSX.Element {
 
       <Footer />
     </>
-  )
+  );
 }

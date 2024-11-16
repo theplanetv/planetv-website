@@ -1,6 +1,6 @@
-export type BlogData = BlogTag[]
+export type BlogData = BlogTag[];
 
 export type BlogTag = {
-  id: string
-  name: string
-}
+  id: string;
+  name: string;
+};
